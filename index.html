@@ -644,13 +644,14 @@
 <script>
 /* ── DATA ── */
 const SPINE_COLOURS = [
-  '#7F77DD','#4a7c59','#993C1D','#185FA5','#639922',
+  '#005d50','#4a7c59','#993C1D','#185FA5','#639922',
   '#2C2C2A','#BA7517','#D4537E','#534AB7','#0F6E56',
   '#D85A30','#888780','#1D9E75','#3B6D11','#993556'
 ];
 
 const SHELF_META = [
   { id: 'faves',   label: '⭐ Favourites',        badgeClass: 'badge-fave',    badgeLabel: 'Favourite' },
+  { id: 'ATW',     label: '🌍 Around The World',   badgeClass: 'badge-ATW',    badgeLabel: 'Around The World' },
   { id: 'reading', label: '📖 Currently reading',  badgeClass: 'badge-reading', badgeLabel: 'Currently reading' },
   { id: 'tbr',     label: '🔖 To be read',         badgeClass: 'badge-tbr',     badgeLabel: 'To be read' },
   { id: 'done',    label: '✓ Read',                badgeClass: 'badge-done',    badgeLabel: 'Read' },
@@ -658,21 +659,8 @@ const SHELF_META = [
 
 // ── EDIT THIS LIST to add your own books ──
 let books = [
-  { id:1, shelf:'faves',   title:'Normal People',              author:'Sally Rooney',    colour:'#7F77DD', height:105, rating:5, blurb:'A story about the complicated relationship between two young Irish people navigating love, class, and identity.', thoughts:'Absolutely gripped me. The dialogue felt so real — I finished it in two sittings.' },
-  { id:2, shelf:'faves',   title:'Piranesi',                   author:'Susanna Clarke',   colour:'#0F6E56', height:98,  rating:5, blurb:'A mysterious man lives in a labyrinthine House filled with statues and tides — a sublime puzzle of a novel.', thoughts:'Unlike anything I\'ve ever read. Strange, beautiful and quietly devastating.' },
-  { id:3, shelf:'faves',   title:'The Secret History',         author:'Donna Tartt',      colour:'#993C1D', height:112, rating:5, blurb:'A group of eccentric classics students at a Vermont college become entangled in a murder of their own making.', thoughts:'My all-time comfort read. Dark academia at its absolute finest.' },
-  { id:4, shelf:'faves',   title:'Educated',                   author:'Tara Westover',    colour:'#185FA5', height:100, rating:5, blurb:'A memoir about a woman who grows up in a survivalist family and eventually finds her way to Cambridge.', thoughts:'Staggering. I kept having to put it down.' },
-  { id:5, shelf:'faves',   title:'Tomorrow and Tomorrow',      author:'Gabrielle Zevin',  colour:'#639922', height:108, rating:4, blurb:'An epic novel about love, art, and video games spanning three decades of two designers\' intertwined lives.', thoughts:'So tender and inventive. Cried at the end.' },
-  { id:6, shelf:'faves',   title:'A Little Life',              author:'Hanya Yanagihara', colour:'#2C2C2A', height:118, rating:5, blurb:'Four college friends move to New York. One carries a devastating secret. A monumental novel about trauma and love.', thoughts:'The most emotionally demanding book I\'ve ever read.' },
-  { id:7, shelf:'reading', title:'James',                      author:'Percival Everett',  colour:'#BA7517', height:102, rating:null, blurb:'A reimagining of Huckleberry Finn told from the perspective of the enslaved Jim.', thoughts:'Really gripping so far — about 60% through.' },
-  { id:8, shelf:'reading', title:'The Women',                  author:'Kristin Hannah',    colour:'#D4537E', height:108, rating:null, blurb:'A sweeping story of a young woman who follows her brother to serve as a nurse in Vietnam.', thoughts:'Just started. Hannah\'s prose is so immersive already.' },
-  { id:9, shelf:'tbr',    title:'Intermezzo',                  author:'Sally Rooney',      colour:'#534AB7', height:100, rating:null, blurb:'Two brothers struggle with grief, love and identity after the death of their father.', thoughts:'High on my list.' },
-  { id:10,shelf:'tbr',    title:'All Fours',                   author:'Miranda July',      colour:'#993556', height:96,  rating:null, blurb:'A woman impulsively abandons a road trip and rents a motel room, upending her life.', thoughts:'Heard so many great things.' },
-  { id:11,shelf:'tbr',    title:'Orbital',                     author:'Samantha Harvey',   colour:'#0C447C', height:104, rating:null, blurb:'Six astronauts orbit Earth sixteen times a day. Booker Prize winner.', thoughts:'Won the Booker — can\'t wait.' },
-  { id:12,shelf:'tbr',    title:'Demon Copperhead',            author:'Barbara Kingsolver', colour:'#3B6D11', height:110, rating:null, blurb:'A retelling of David Copperfield set in the Appalachian opioid crisis. Pulitzer Prize winner.', thoughts:'Been on my shelf for months.' },
-  { id:13,shelf:'done',   title:'Hamnet',                      author:"Maggie O'Farrell",  colour:'#D85A30', height:100, rating:4, blurb:'The story of Shakespeare\'s son who died at eleven, and the grief that followed.', thoughts:'Beautifully written. The prose is gorgeous.' },
-  { id:14,shelf:'done',   title:'Lessons in Chemistry',        author:'Bonnie Garmus',     colour:'#1D9E75', height:104, rating:4, blurb:'A female chemist in the 1960s becomes a cooking show host, upending gender norms.', thoughts:'Funny, sharp and uplifting.' },
-  { id:15,shelf:'done',   title:'Yellowface',                  author:'R.F. Kuang',        colour:'#7F77DD', height:98,  rating:4, blurb:'A white author steals the manuscript of her Asian-American friend after her sudden death.', thoughts:'Wickedly sharp satire on publishing and race.' },
+  { id:1, shelf:'ATW',     title:'The Lion Women of Tehran',   author:'Marjan Kamali',    colour:'#005d50', height:105, rating:4, blurb:'The Lion Women of Tehran follows Ellie and Homa, who meet as girls in 1950s Tehran and dream of fearless futures. Torn apart by class divides and political unrest, their bond endures through betrayal, exile, and revolution, shaping their lives across decades and inspiring the next generation.', thoughts:'Slow paced book where you really understand how peoples lives are shaped by the experiences around them' },
+ 
 ];
 
 let nextId = 100;
