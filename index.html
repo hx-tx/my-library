@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --wood-dark: #6b4226;
+    --wood-mid: #8b5a2b;
+    --wood-light: #c19a6b;
+    --wood-grain: #a0703a;
+    --bg: #f5ede0;
+    --bg-alt: #ede2d0;
+    --text: #2c1a0e;
+    --text-muted: #7a5c3a;
+    --text-light: #b89070;
+    --accent: #c05c2b;
+    --accent2: #4a7c59;
+    --modal-bg: #fdf8f2;
+    --border: rgba(100,60,20,0.15);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(192,92,43,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 100%, rgba(74,124,89,0.06) 0%, transparent 60%);
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 3rem 2.5rem 2rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .header-title span {
+    display: block;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.55em;
+    color: var(--text-muted);
+    margin-bottom: 0.3em;
+    letter-spacing: 0.04em;
+  }
+
+  .header-stats {
+    text-align: right;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--accent);
+    display: block;
+    line-height: 1;
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+
+  /* ── SHELF SECTION ── */
+  .shelf-section {
+    margin-bottom: 3rem;
+  }
+
+  .shelf-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+    padding-left: 0.5rem;
+  }
+
+  .shelf-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+  }
+
+  .shelf-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .shelf-count {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-left: 4px;
+  }
+
+  /* ── SHELF UNIT ── */
+  .shelf-unit {
+    background: linear-gradient(180deg, #d4b896 0%, #c9a87c 100%);
+    border-radius: 4px 4px 0 0;
+    padding: 1rem 1.2rem 0;
+    border: 1px solid rgba(100,60,20,0.2);
+    border-bottom: none;
+    position: relative;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.3),
+      0 -2px 0 rgba(100,60,20,0.1);
+  }
+
+  .shelf-unit::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 80px,
+      rgba(100,60,20,0.04) 80px,
+      rgba(100,60,20,0.04) 81px
+    );
+    border-radius: 4px 4px 0 0;
+    pointer-events: none;
+  }
+
+  .books-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    min-height: 130px;
+    flex-wrap: wrap;
+  }
+
+  /* ── BOOK SPINE ── */
+  .book {
+    border-radius: 2px 3px 3px 2px;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1);
+    box-shadow:
+      inset -3px 0 6px rgba(0,0,0,0.18),
+      inset 1px 0 0 rgba(255,255,255,0.25),
+      2px 0 4px rgba(0,0,0,0.12);
+    border-left: 3px solid rgba(255,255,255,0.15);
+  }
+
+  .book:hover {
+    transform: translateY(-10px) scale(1.03);
+    z-index: 5;
+    box-shadow:
+      inset -3px 0 6px rgba(0,0,0,0.22),
+      inset 1px 0 0 rgba(255,255,255,0.3),
+      4px 4px 12px rgba(0,0,0,0.25);
+  }
+
+  .book-spine-title {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.92);
+    padding: 8px 0;
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-height: calc(100% - 16px);
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    width: 100%;
+    text-align: center;
+  }
+
+  /* ── SHELF PLANK ── */
+  .shelf-plank {
+    height: 14px;
+    background: linear-gradient(180deg, var(--wood-mid) 0%, var(--wood-dark) 100%);
+    border-radius: 0 0 3px 3px;
+    border: 1px solid rgba(60,30,10,0.3);
+    border-top: 2px solid rgba(60,30,10,0.4);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    position: relative;
+  }
+
+  .shelf-plank::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 8px; right: 8px;
+    height: 1px;
+    background: rgba(255,255,255,0.12);
+  }
+
+  /* ── ADD BOOK ── */
+  .add-book {
+    width: 34px;
+    height: 120px;
+    border-radius: 2px;
+    border: 1.5px dashed rgba(100,60,20,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: rgba(100,60,20,0.4);
+    font-size: 20px;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    background: rgba(255,255,255,0.1);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .add-book:hover {
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(100,60,20,0.5);
+    color: rgba(100,60,20,0.6);
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(44,26,14,0.55);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(3px);
+    padding: 1rem;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--modal-bg);
+    border-radius: 12px;
+    width: min(480px, 100%);
+    max-height: 88vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    border: 1px solid rgba(100,60,20,0.12);
+    animation: modalIn 0.22s cubic-bezier(0.34,1.3,0.64,1);
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.92) translateY(10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-book-header {
+    display: flex;
+    gap: 1.25rem;
+    padding: 1.75rem 1.75rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+
+  .modal-cover {
+    width: 64px;
+    min-width: 64px;
+    height: 92px;
+    border-radius: 2px 4px 4px 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow:
+      inset -4px 0 8px rgba(0,0,0,0.2),
+      3px 3px 10px rgba(0,0,0,0.2);
+    border-left: 4px solid rgba(255,255,255,0.2);
+  }
+
+  .modal-cover-title {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 10px;
+    color: rgba(255,255,255,0.9);
+    font-weight: 500;
+    overflow: hidden;
+    max-height: 80px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 4px 0;
+    font-family: 'DM Sans', sans-serif;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+
+  .modal-meta { flex: 1; }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+
+  .modal-author {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .modal-stars {
+    color: #d4820a;
+    font-size: 17px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .modal-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.03em;
+  }
+
+  .badge-fave    { background: #fbe9d0; color: #7a3d10; }
+  .badge-reading { background: #dff0e8; color: #1a5c3a; }
+  .badge-tbr     { background: #e8e4f6; color: #3d2e7a; }
+  .badge-done    { background: #e4edd8; color: #2e4a1a; }
+
+  .modal-body { padding: 1.25rem 1.75rem 1.75rem; }
+
+  .modal-section { margin-bottom: 1.25rem; }
+
+  .modal-section:last-child { margin-bottom: 0; }
+
+  .modal-section-label {
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-light);
+    margin-bottom: 6px;
+  }
+
+  .modal-section-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .modal-section-text.thoughts {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--text-muted);
+    padding-left: 12px;
+    border-left: 2px solid var(--accent);
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--text-muted);
+    line-height: 1;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .close-btn:hover { background: var(--bg); color: var(--text); }
+
+  /* ── ADD FORM ── */
+  .add-form-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(44,26,14,0.55);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(3px);
+    padding: 1rem;
+  }
+  .add-form-overlay.open { display: flex; }
+
+  .add-form {
+    background: var(--modal-bg);
+    border-radius: 12px;
+    width: min(440px, 100%);
+    padding: 1.75rem;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    border: 1px solid rgba(100,60,20,0.12);
+    animation: modalIn 0.22s cubic-bezier(0.34,1.3,0.64,1);
+  }
+
+  .form-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+  }
+
+  .form-group { margin-bottom: 1rem; }
+
+  .form-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+  }
+
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    padding: 9px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(100,60,20,0.25);
+    background: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(192,92,43,0.12);
+  }
+
+  .form-textarea { resize: vertical; min-height: 80px; }
+
+  .star-rating { display: flex; gap: 4px; }
+  .star-btn {
+    background: none; border: none; cursor: pointer;
+    font-size: 22px; color: #ddd; transition: color 0.1s; padding: 0;
+    line-height: 1;
+  }
+  .star-btn.active { color: #d4820a; }
+
+  .form-row { display: flex; gap: 12px; }
+  .form-row .form-group { flex: 1; }
+
+  .btn-primary {
+    width: 100%;
+    padding: 10px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background 0.15s;
+  }
+  .btn-primary:hover { background: #a84d21; }
+
+  /* ── COLOUR PICKER ── */
+  .colour-row {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .colour-swatch {
+    width: 26px; height: 26px;
+    border-radius: 3px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.1s;
+  }
+  .colour-swatch:hover { transform: scale(1.1); }
+  .colour-swatch.selected { border-color: var(--text); }
+
+  /* ── EMPTY SHELF ── */
+  .empty-msg {
+    font-size: 13px;
+    color: rgba(100,60,20,0.4);
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    height: 120px;
+    padding: 0 8px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 12px;
+    color: var(--text-light);
+    font-style: italic;
+  }
+
+  @media (max-width: 600px) {
+    header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .header-stats { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 class="header-title">
+      <span>my personal</span>
+      Library
+    </h1>
+  </div>
+  <div class="header-stats">
+    <span class="stat-num" id="total-count">0</span>
+    books catalogued
+  </div>
+</header>
+
+<main id="main-shelves"></main>
+
+<footer>Click any spine to open · hover to preview title · + to add a new book</footer>
+
+<!-- Book detail modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <button class="close-btn" id="close-modal" aria-label="Close">✕</button>
+    <div class="modal-book-header">
+      <div class="modal-cover" id="modal-cover">
+        <span class="modal-cover-title" id="modal-cover-title"></span>
+      </div>
+      <div class="modal-meta">
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-author" id="modal-author"></div>
+        <span class="modal-stars" id="modal-stars"></span>
+        <span class="modal-badge" id="modal-badge"></span>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section" id="blurb-section">
+        <div class="modal-section-label">Blurb</div>
+        <div class="modal-section-text" id="modal-blurb"></div>
+      </div>
+      <div class="modal-section" id="thoughts-section">
+        <div class="modal-section-label">My thoughts</div>
+        <div class="modal-section-text thoughts" id="modal-thoughts"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add book form -->
+<div class="add-form-overlay" id="add-form-overlay">
+  <div class="add-form">
+    <button class="close-btn" id="close-form" aria-label="Close">✕</button>
+    <div class="form-title">Add a book</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Title *</label>
+        <input class="form-input" id="f-title" type="text" placeholder="Book title">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Author *</label>
+        <input class="form-input" id="f-author" type="text" placeholder="Author name">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Shelf</label>
+      <select class="form-select" id="f-shelf">
+        <option value="faves">⭐ Favourites</option>
+        <option value="reading">📖 Currently reading</option>
+        <option value="tbr" selected>🔖 To be read</option>
+        <option value="done">✓ Read</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">My rating</label>
+      <div class="star-rating" id="star-rating">
+        <button class="star-btn" data-v="1">★</button>
+        <button class="star-btn" data-v="2">★</button>
+        <button class="star-btn" data-v="3">★</button>
+        <button class="star-btn" data-v="4">★</button>
+        <button class="star-btn" data-v="5">★</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Blurb</label>
+      <textarea class="form-textarea" id="f-blurb" placeholder="A short description of the book..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">My thoughts</label>
+      <textarea class="form-textarea" id="f-thoughts" placeholder="What did you think?"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Spine colour</label>
+      <div class="colour-row" id="colour-picker"></div>
+    </div>
+
+    <button class="btn-primary" id="save-book">Add to shelf</button>
+    <div id="form-error" style="color:#c05c2b;font-size:13px;margin-top:8px;display:none">Please add at least a title and author.</div>
+  </div>
+</div>
+
+<script>
+/* ── DATA ── */
+const SPINE_COLOURS = [
+  '#7F77DD','#4a7c59','#993C1D','#185FA5','#639922',
+  '#2C2C2A','#BA7517','#D4537E','#534AB7','#0F6E56',
+  '#D85A30','#888780','#1D9E75','#3B6D11','#993556'
+];
+
+const SHELF_META = [
+  { id: 'faves',   label: '⭐ Favourites',        badgeClass: 'badge-fave',    badgeLabel: 'Favourite' },
+  { id: 'reading', label: '📖 Currently reading',  badgeClass: 'badge-reading', badgeLabel: 'Currently reading' },
+  { id: 'tbr',     label: '🔖 To be read',         badgeClass: 'badge-tbr',     badgeLabel: 'To be read' },
+  { id: 'done',    label: '✓ Read',                badgeClass: 'badge-done',    badgeLabel: 'Read' },
+];
+
+// ── EDIT THIS LIST to add your own books ──
+let books = [
+  { id:1, shelf:'faves',   title:'Normal People',              author:'Sally Rooney',    colour:'#7F77DD', height:105, rating:5, blurb:'A story about the complicated relationship between two young Irish people navigating love, class, and identity.', thoughts:'Absolutely gripped me. The dialogue felt so real — I finished it in two sittings.' },
+  { id:2, shelf:'faves',   title:'Piranesi',                   author:'Susanna Clarke',   colour:'#0F6E56', height:98,  rating:5, blurb:'A mysterious man lives in a labyrinthine House filled with statues and tides — a sublime puzzle of a novel.', thoughts:'Unlike anything I\'ve ever read. Strange, beautiful and quietly devastating.' },
+  { id:3, shelf:'faves',   title:'The Secret History',         author:'Donna Tartt',      colour:'#993C1D', height:112, rating:5, blurb:'A group of eccentric classics students at a Vermont college become entangled in a murder of their own making.', thoughts:'My all-time comfort read. Dark academia at its absolute finest.' },
+  { id:4, shelf:'faves',   title:'Educated',                   author:'Tara Westover',    colour:'#185FA5', height:100, rating:5, blurb:'A memoir about a woman who grows up in a survivalist family and eventually finds her way to Cambridge.', thoughts:'Staggering. I kept having to put it down.' },
+  { id:5, shelf:'faves',   title:'Tomorrow and Tomorrow',      author:'Gabrielle Zevin',  colour:'#639922', height:108, rating:4, blurb:'An epic novel about love, art, and video games spanning three decades of two designers\' intertwined lives.', thoughts:'So tender and inventive. Cried at the end.' },
+  { id:6, shelf:'faves',   title:'A Little Life',              author:'Hanya Yanagihara', colour:'#2C2C2A', height:118, rating:5, blurb:'Four college friends move to New York. One carries a devastating secret. A monumental novel about trauma and love.', thoughts:'The most emotionally demanding book I\'ve ever read.' },
+  { id:7, shelf:'reading', title:'James',                      author:'Percival Everett',  colour:'#BA7517', height:102, rating:null, blurb:'A reimagining of Huckleberry Finn told from the perspective of the enslaved Jim.', thoughts:'Really gripping so far — about 60% through.' },
+  { id:8, shelf:'reading', title:'The Women',                  author:'Kristin Hannah',    colour:'#D4537E', height:108, rating:null, blurb:'A sweeping story of a young woman who follows her brother to serve as a nurse in Vietnam.', thoughts:'Just started. Hannah\'s prose is so immersive already.' },
+  { id:9, shelf:'tbr',    title:'Intermezzo',                  author:'Sally Rooney',      colour:'#534AB7', height:100, rating:null, blurb:'Two brothers struggle with grief, love and identity after the death of their father.', thoughts:'High on my list.' },
+  { id:10,shelf:'tbr',    title:'All Fours',                   author:'Miranda July',      colour:'#993556', height:96,  rating:null, blurb:'A woman impulsively abandons a road trip and rents a motel room, upending her life.', thoughts:'Heard so many great things.' },
+  { id:11,shelf:'tbr',    title:'Orbital',                     author:'Samantha Harvey',   colour:'#0C447C', height:104, rating:null, blurb:'Six astronauts orbit Earth sixteen times a day. Booker Prize winner.', thoughts:'Won the Booker — can\'t wait.' },
+  { id:12,shelf:'tbr',    title:'Demon Copperhead',            author:'Barbara Kingsolver', colour:'#3B6D11', height:110, rating:null, blurb:'A retelling of David Copperfield set in the Appalachian opioid crisis. Pulitzer Prize winner.', thoughts:'Been on my shelf for months.' },
+  { id:13,shelf:'done',   title:'Hamnet',                      author:"Maggie O'Farrell",  colour:'#D85A30', height:100, rating:4, blurb:'The story of Shakespeare\'s son who died at eleven, and the grief that followed.', thoughts:'Beautifully written. The prose is gorgeous.' },
+  { id:14,shelf:'done',   title:'Lessons in Chemistry',        author:'Bonnie Garmus',     colour:'#1D9E75', height:104, rating:4, blurb:'A female chemist in the 1960s becomes a cooking show host, upending gender norms.', thoughts:'Funny, sharp and uplifting.' },
+  { id:15,shelf:'done',   title:'Yellowface',                  author:'R.F. Kuang',        colour:'#7F77DD', height:98,  rating:4, blurb:'A white author steals the manuscript of her Asian-American friend after her sudden death.', thoughts:'Wickedly sharp satire on publishing and race.' },
+];
+
+let nextId = 100;
+let currentAddShelf = 'tbr';
+let selectedRating = 0;
+let selectedColour = SPINE_COLOURS[0];
+
+/* ── RENDER ── */
+function render() {
+  const main = document.getElementById('main-shelves');
+  main.innerHTML = '';
+
+  SHELF_META.forEach(sm => {
+    const section = document.createElement('div');
+    section.className = 'shelf-section';
+
+    const shelfBooks = books.filter(b => b.shelf === sm.id);
+
+    section.innerHTML = `
+      <div class="shelf-header">
+        <span class="shelf-name">${sm.label}</span>
+        <span class="shelf-count">${shelfBooks.length} book${shelfBooks.length !== 1 ? 's' : ''}</span>
+      </div>
+      <div class="shelf-unit">
+        <div class="books-row" id="row-${sm.id}"></div>
+        <div class="shelf-plank"></div>
+      </div>
+    `;
+
+    main.appendChild(section);
+    const row = document.getElementById('row-' + sm.id);
+
+    if (shelfBooks.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'empty-msg';
+      empty.textContent = 'No books here yet — add one!';
+      row.appendChild(empty);
+    } else {
+      shelfBooks.forEach(b => {
+        const el = document.createElement('div');
+        el.className = 'book';
+        el.title = b.title + ' — ' + b.author;
+        el.style.cssText = `background:${b.colour};height:${b.height}px;width:34px;`;
+        el.innerHTML = `<span class="book-spine-title">${b.title}</span>`;
+        el.addEventListener('click', () => openModal(b));
+        row.appendChild(el);
+      });
+    }
+
+    // Add button
+    const addBtn = document.createElement('div');
+    addBtn.className = 'add-book';
+    addBtn.title = 'Add a book';
+    addBtn.innerHTML = '+';
+    addBtn.addEventListener('click', () => openAddForm(sm.id));
+    row.appendChild(addBtn);
+  });
+
+  document.getElementById('total-count').textContent = books.length;
+}
+
+/* ── MODAL ── */
+const badgeMap = Object.fromEntries(SHELF_META.map(s => [s.id, { cls: s.badgeClass, label: s.badgeLabel }]));
+
+function starsHtml(n) {
+  if (!n) return '<span style="font-size:12px;color:var(--text-light)">not yet rated</span>';
+  return '★'.repeat(n) + '<span style="color:#ddd">' + '★'.repeat(5-n) + '</span>';
+}
+
+function openModal(b) {
+  document.getElementById('modal-cover').style.background = b.colour;
+  document.getElementById('modal-cover-title').textContent = b.title;
+  document.getElementById('modal-title').textContent = b.title;
+  document.getElementById('modal-author').textContent = 'by ' + b.author;
+  document.getElementById('modal-stars').innerHTML = starsHtml(b.rating);
+  const badge = badgeMap[b.shelf];
+  const badgeEl = document.getElementById('modal-badge');
+  badgeEl.textContent = badge.label;
+  badgeEl.className = 'modal-badge ' + badge.cls;
+  document.getElementById('modal-blurb').textContent = b.blurb || '';
+  document.getElementById('modal-thoughts').textContent = b.thoughts || '';
+  document.getElementById('blurb-section').style.display = b.blurb ? '' : 'none';
+  document.getElementById('thoughts-section').style.display = b.thoughts ? '' : 'none';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+document.getElementById('close-modal').addEventListener('click', () => {
+  document.getElementById('modal-overlay').classList.remove('open');
+});
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay'))
+    document.getElementById('modal-overlay').classList.remove('open');
+});
+
+/* ── ADD FORM ── */
+function buildColourPicker() {
+  const cp = document.getElementById('colour-picker');
+  SPINE_COLOURS.forEach(c => {
+    const sw = document.createElement('div');
+    sw.className = 'colour-swatch' + (c === selectedColour ? ' selected' : '');
+    sw.style.background = c;
+    sw.title = c;
+    sw.addEventListener('click', () => {
+      selectedColour = c;
+      document.querySelectorAll('.colour-swatch').forEach(s => s.classList.remove('selected'));
+      sw.classList.add('selected');
+    });
+    cp.appendChild(sw);
+  });
+}
+
+function openAddForm(shelfId) {
+  currentAddShelf = shelfId;
+  document.getElementById('f-title').value = '';
+  document.getElementById('f-author').value = '';
+  document.getElementById('f-shelf').value = shelfId;
+  document.getElementById('f-blurb').value = '';
+  document.getElementById('f-thoughts').value = '';
+  document.getElementById('form-error').style.display = 'none';
+  selectedRating = 0;
+  updateStars(0);
+  selectedColour = SPINE_COLOURS[Math.floor(Math.random() * SPINE_COLOURS.length)];
+  document.querySelectorAll('.colour-swatch').forEach(s => {
+    s.classList.toggle('selected', s.style.background === selectedColour || s.title === selectedColour);
+  });
+  document.getElementById('add-form-overlay').classList.add('open');
+  document.getElementById('f-title').focus();
+}
+
+document.getElementById('close-form').addEventListener('click', () => {
+  document.getElementById('add-form-overlay').classList.remove('open');
+});
+document.getElementById('add-form-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('add-form-overlay'))
+    document.getElementById('add-form-overlay').classList.remove('open');
+});
+
+function updateStars(n) {
+  document.querySelectorAll('.star-btn').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.v) <= n);
+  });
+}
+
+document.getElementById('star-rating').addEventListener('click', e => {
+  const btn = e.target.closest('.star-btn');
+  if (!btn) return;
+  const v = parseInt(btn.dataset.v);
+  selectedRating = selectedRating === v ? 0 : v;
+  updateStars(selectedRating);
+});
+
+document.getElementById('save-book').addEventListener('click', () => {
+  const title = document.getElementById('f-title').value.trim();
+  const author = document.getElementById('f-author').value.trim();
+  if (!title || !author) {
+    document.getElementById('form-error').style.display = 'block';
+    return;
+  }
+  const shelf = document.getElementById('f-shelf').value;
+  books.push({
+    id: nextId++,
+    shelf,
+    title,
+    author,
+    colour: selectedColour,
+    height: 90 + Math.floor(Math.random() * 30),
+    rating: selectedRating || null,
+    blurb: document.getElementById('f-blurb').value.trim(),
+    thoughts: document.getElementById('f-thoughts').value.trim(),
+  });
+  document.getElementById('add-form-overlay').classList.remove('open');
+  render();
+});
+
+/* ── INIT ── */
+buildColourPicker();
+render();
+</script>
+</body>
+</html>
